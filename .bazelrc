@@ -1,0 +1,7 @@
+build --cxxopt='-std=c++11'
+
+# The GRPC_BAZEL_BUILD flag is used to fix the bugs when compiling grpc on Mac, see [https://github.com/grpc/grpc/pull/13929/commits/91bab371297b1e53491548bbd9f3588dea93374d]
+build --copt -DGRPC_BAZEL_BUILD
+
+# For compatibility of protobuf.bzl
+build --incompatible_no_support_tools_in_action_inputs=false
