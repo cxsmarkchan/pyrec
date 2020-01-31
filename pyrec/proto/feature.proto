@@ -16,16 +16,38 @@
 
 syntax = "proto3";
 
-package pyrec.service;
+package pyrec.feature;
 
-message PyRecRequest {
-  string id = 1;
-};
-
-message PyRecReply {
-  string id = 1;
+message IdWeight {
+  oneof kind {
+    bytes id_bytes = 1;
+    int64 id_int = 2;
+  }
+  float weight = 3;
 }
 
-service RecommendService {
-  rpc OnServing(PyRecRequest) returns (PyRecReply) {}
+message BytesList {
+  repeated bytes values = 1;
+}
+message FloatList {
+  repeated float values = 1;
+}
+message IntList {
+  repeated int64 values = 1;
+}
+message WeightedList {
+  repeated IdWeight values = 1;
+}
+
+message FeatureList {
+  oneof kind {
+    BytesList bytes_list = 1;
+    FloatList float_list = 2;
+    IntList int_list = 3;
+    WeightedList weighted_list = 4;
+  }
+}
+
+message FeatureMap {
+  map<int32, FeatureList> feature_map = 1;
 }

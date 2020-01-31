@@ -5,14 +5,40 @@ package(
 )
 
 cc_proto_library(
-    name = "service_cc_proto",
-    srcs = ["service.proto"],
+    name = "recommend_cc_proto",
+    srcs = ["recommend.proto"],
+    deps = [":feature_cc_proto"],
     use_grpc_plugin = True,
 )
 
 py_proto_library(
-    name = "service_py_proto",
-    srcs = ["service.proto"],
+    name = "recommend_py_proto",
+    srcs = ["recommend.proto"],
+    deps = [":feature_py_proto"],
+    use_grpc_plugin = True,
+)
+
+cc_proto_library(
+    name = "feature_cc_proto",
+    srcs = ["feature.proto"],
+)
+
+py_proto_library(
+    name = "feature_py_proto",
+    srcs = ["feature.proto"],
+)
+
+cc_proto_library(
+    name = "index_cc_proto",
+    srcs = ["index.proto"],
+    deps = [":feature_cc_proto"],
+    use_grpc_plugin = True,
+)
+
+py_proto_library(
+    name = "index_py_proto",
+    srcs = ["index.proto"],
+    deps = [":feature_py_proto"],
     use_grpc_plugin = True,
 )
 

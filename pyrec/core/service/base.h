@@ -22,7 +22,7 @@
 
 #include "boost/format.hpp"
 
-#include "pyrec/proto/service.grpc.pb.h"
+#include "pyrec/proto/recommend.grpc.pb.h"
 #include "pyrec/core/util/status.h"
 #include "pyrec/core/util/ip.h"
 

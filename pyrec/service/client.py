@@ -15,8 +15,8 @@
 """PyRec client interfaces."""
 import grpc
 
-from pyrec.proto.service_pb2 import PyRecRequest
-from pyrec.proto import service_pb2_grpc
+from pyrec.proto.recommend_pb2 import PyRecRequest
+from pyrec.proto import recommend_pb2_grpc
 
 from pyrec.service.ip import Address
 
@@ -39,6 +39,6 @@ class RecommendClient:
     assert isinstance(address, Address)
     assert isinstance(request, PyRecRequest)
     channel = grpc.insecure_channel(address.to_string())
-    stub = service_pb2_grpc.RecommendServiceStub(channel)
+    stub = recommend_pb2_grpc.RecommendServiceStub(channel)
     response = stub.OnServing(request)
     return response

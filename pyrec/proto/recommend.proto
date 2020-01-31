@@ -1,0 +1,87 @@
+/*
+ * Copyright 2020 The PyRec Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+
+package pyrec.service;
+
+import "pyrec/proto/feature.proto";
+
+message Conf {
+  message ConfItem {
+    bytes key = 1;
+    bytes value = 2;
+  }
+  repeated ConfItem items = 1;
+}
+
+message TriggerInfo {
+  int32 trigger_id = 1;
+  float score = 2;
+  int32 rank = 3;
+  float rank_ratio = 4;
+}
+
+message ItemInfo {
+  // We use FeatureMap instead of string for item_id,
+  // since an item may have multiple ids from different source
+  pyrec.feature.FeatureMap item_id = 1;
+  repeated TriggerInfo trigger_info = 2;
+  map<int32, float> scores = 3;
+}
+
+message PyRecRequest {
+  bytes request_id = 1;
+  Conf conf = 2;
+  map<int32, pyrec.feature.FeatureMap> context = 3;
+}
+
+message PyRecRequestWithItems {
+  bytes request_id = 1;
+  Conf conf = 2;
+  map<int32, pyrec.feature.FeatureMap> context = 3;
+  repeated ItemInfo items = 4;
+}
+
+message ContextReply {
+  bytes request_id = 1;
+  map<int32, pyrec.feature.FeatureMap> context = 2;
+}
+
+message ItemReply {
+  bytes request_id = 1;
+  repeated ItemInfo items = 2;
+}
+
+service RecommendService {
+  rpc OnServing(PyRecRequest) returns (ItemReply) {}
+}
+
+service ConfService {
+  rpc OnConfigure(PyRecRequest) returns (Conf) {}
+}
+
+service ContextService {
+  rpc OnContext(PyRecRequest) returns (ContextReply) {}
+}
+
+service RetrievalService {
+  rpc OnRetrieval(PyRecRequest) returns (ItemReply) {}
+}
+
+service RankingService {
+  rpc OnRanking(PyRecRequestWithItems) returns (ItemReply) {}
+}

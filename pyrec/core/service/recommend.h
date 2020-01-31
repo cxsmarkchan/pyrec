@@ -25,9 +25,9 @@ namespace service {
 class RecommendServer final :
     public BaseServer<RecommendService,
                       PyRecRequest,
-                      PyRecReply> {
+                      ItemReply> {
   pyrec::Status ServingProcess(const PyRecRequest* request,
-                               PyRecReply* reply) override;
+                               ItemReply* reply) override;
 };
 
 }  // namespace service

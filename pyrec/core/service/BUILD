@@ -15,7 +15,7 @@ cc_library(
             "base.h"],
     deps = [
         "@com_github_grpc_grpc//:grpc++",
-        "//pyrec/proto:service_cc_proto",
+        "//pyrec/proto:recommend_cc_proto",
         "//pyrec/core/util:util",
     ],
     visibility = ["//visibility:public"],

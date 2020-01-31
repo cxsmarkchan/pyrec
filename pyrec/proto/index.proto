@@ -1,0 +1,98 @@
+/*
+ * Copyright 2020 The PyRec Authors. All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+syntax = "proto3";
+
+package pyrec.service;
+
+import "pyrec/proto/feature.proto";
+
+message IndexItem {
+  pyrec.feature.FeatureMap item_id = 1;
+  map<int32, pyrec.feature.FeatureMap> feature_map = 2;
+}
+
+message MatchSearchItem {
+  oneof kind {
+    bytes bytes_value = 1;
+    int64 int_value = 2;
+  }
+}
+
+message FloatRange {
+  float min_value = 1;
+  float max_value = 2;
+}
+
+message IntRange {
+  int64 min_value = 1;
+  int64 max_value = 2;
+}
+
+message RangeSearchItem {
+  oneof kind {
+    FloatRange float_range = 1;
+    IntRange int_range = 2;
+  }
+}
+
+message SearchItem {
+  oneof kind {
+    MatchSearchItem match_search_item = 1;
+    RangeSearchItem range_search_item = 2;
+  }
+}
+
+message SearchRequest {
+  // search pattern: intersection of search_items
+  map<int32, SearchItem> search_items = 1;
+}
+
+// A ForwardIndexRequest object means to obtain the items by id.
+// Type: the type of id, since there may be multiple kinds of ids.
+// Ids: the list of searched ids.
+// Requested Fields: fields needed to be returned, if none, all fields.
+message ForwardIndexRequest {
+  int32 type = 1;
+  repeated bytes ids = 2;
+  repeated int32 requested_fields = 3;
+}
+
+// A ForwardIndexRequest object means to obtain the items by id.
+// Search Requests:
+//   - Union of some search requests, 
+//     only one of which need to be satisfied in the returned items.
+//   - One search request contains multiple search items,
+//     all of which need to be satisfied in the returned items
+//     w.r.t. this search item.
+//   - In other words, the search pattern is
+//     the union of the intersection of search items.
+// Max Num: the maximum number to be returned.
+// Requested Fields: fields needed to be returned, if none, all fields.
+message InvertedIndexRequest {
+  repeated SearchRequest search_requests = 1;
+  int32 max_num = 2;
+  repeated int32 requested_fields = 3;
+}
+
+message IndexReply {
+  repeated IndexItem items = 1;
+}
+
+service IndexService {
+  rpc OnForward(ForwardIndexRequest) returns (IndexReply) {}
+  rpc OnInverted(InvertedIndexRequest) returns (IndexReply) {}
+}
