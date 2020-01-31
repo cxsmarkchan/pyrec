@@ -36,6 +36,9 @@ py_library(
         "//pyrec/proto:service_py_proto",
         "//pyrec:pywrap_core",
     ],
+    data = [
+        "//pyrec:pywrap_core_shared_library",
+    ],
 )
 
 py_library(

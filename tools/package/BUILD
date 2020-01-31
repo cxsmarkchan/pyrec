@@ -1,7 +1,6 @@
 package(default_visibility = ["//visibility:private"])
 
 COMMON_DEPS = [
-    "//pyrec:pywrap_core_shared_library",
     "//pyrec:pyrec",
 ]
 
