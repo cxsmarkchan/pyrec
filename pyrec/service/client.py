@@ -29,7 +29,7 @@ class RecommendClient:
     """
     return
 
-  def send_request(self, address, request):
+  def request_recommend(self, address, request):
     """
     Send request to the recommend server, and obtain the response.
     :param address: the ip and port of server
@@ -40,5 +40,5 @@ class RecommendClient:
     assert isinstance(request, PyRecRequest)
     channel = grpc.insecure_channel(address.to_string())
     stub = recommend_pb2_grpc.RecommendServiceStub(channel)
-    response = stub.OnServing(request)
+    response = stub.OnRecommend(request)
     return response

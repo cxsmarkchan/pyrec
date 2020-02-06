@@ -1,0 +1,33 @@
+start: statement*
+
+statement: package | message | service | non_statement
+
+non_statement: ";"
+
+variable: CNAME | (CNAME "." variable)
+type: variable [ "<" type [ "," type ] ">" ]
+
+package: "package" variable ";"
+
+message: "message" CNAME "{" (message | simple_field | one_of_field)* "}"
+one_of_field: "oneof" "kind" "{" simple_field+"}"
+simple_field: ["repeated" | "required" | "optional"] type variable "=" INT ";"
+
+service: "service" CNAME "{" rpc* "}"
+rpc: "rpc" CNAME "(" variable ")" "returns" "(" variable ")" "{" "}"
+
+ANGLE: "<" | ">"
+
+IMPORT_LINE: /import [^\n]*/
+OPTION_LINE: /option [^\n]*/
+SYNTAX_LINE: /syntax [^\n]*/
+COMMENT_LINE: /\/\/[^\n]*/
+COMMENT_BLOCK: /\/\*(\*(?!\/)|[^*])*\*\//
+
+%import common (INT, WS, CNAME)
+%ignore COMMENT_LINE
+%ignore IMPORT_LINE
+%ignore OPTION_LINE
+%ignore SYNTAX_LINE
+%ignore COMMENT_BLOCK
+%ignore WS

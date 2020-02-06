@@ -17,49 +17,13 @@
 #ifndef PYREC_CORE_SERVICE_BASE_H_
 #define PYREC_CORE_SERVICE_BASE_H_
 
-#include <iostream>
 #include <memory>
 
-#include "boost/format.hpp"
-
-#include "pyrec/proto/recommend.grpc.pb.h"
 #include "pyrec/core/util/status.h"
 #include "pyrec/core/util/ip.h"
 
 namespace pyrec {
 namespace service {
-
-template<class GrpcService, class Request, class Reply>
-class BaseServer : public GrpcService::Service {
- public:
-  grpc::Status OnServing(grpc::ServerContext* context,
-                         const Request* request,
-                         Reply* reply) final {
-    pyrec::Status status = ServingProcess(request, reply);
-    return status.ToGrpcStatus();
-  }
-
-  pyrec::Status OnLocalServing(const Request* request,
-                               Reply* reply) {
-    return ServingProcess(request, reply);
-  }
-
-  virtual pyrec::Status ServingProcess(const Request* request, Reply* reply) {
-    return pyrec::Status::UNIMPLEMENTED;
-  }
-
-  int Run(const Address& address) {
-    grpc::ServerBuilder builder;
-    builder.AddListeningPort(address.ToString(),
-                             grpc::InsecureServerCredentials());
-    builder.RegisterService(this);
-
-    std::unique_ptr<grpc::Server> server(builder.BuildAndStart());
-    server->Wait();
-
-    return 0;
-  }
-};
 
 template<class Server>
 class ServerWrapper {

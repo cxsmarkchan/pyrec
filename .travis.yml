@@ -14,8 +14,6 @@ before_install:
   - wget https://github.com/bazelbuild/bazel/releases/download/2.0.0/bazel_2.0.0-linux-x86_64.deb
   - sudo dpkg -i bazel_2.0.0-linux-x86_64.deb
   - pip install -r requirements.txt
-  - pip install pylint==2.4.4
-  - pip install cpplint==1.4.5
 
 script:
   - bazel test ...

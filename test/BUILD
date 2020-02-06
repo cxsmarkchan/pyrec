@@ -19,5 +19,8 @@ py_bulk_test(
     name = "py_test",
     srcs = glob(["**/*_test.py"]),
     deps = ["//pyrec:pyrec",
-            ":test_py_files"],
+            ":test_py_files",
+            "//tools:tools_py_files",
+            "//tools/code_gen:hlrpc"]
+            + glob(["**/resources/*"]),
 )

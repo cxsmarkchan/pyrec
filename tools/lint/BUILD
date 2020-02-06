@@ -8,7 +8,11 @@ filegroup(
 
 pylint_test(
     name = "pylint",
-    srcs = ["//pyrec:pyrec_py_files", "//test:test_py_files"],
+    srcs = [
+        "//pyrec:pyrec_py_files",
+        "//test:test_py_files",
+        "//tools:tools_py_files",
+    ],
     config = ":pylint_config",
 )
 

@@ -67,7 +67,7 @@ message ItemReply {
 }
 
 service RecommendService {
-  rpc OnServing(PyRecRequest) returns (ItemReply) {}
+  rpc OnRecommend(PyRecRequest) returns (ItemReply) {}
 }
 
 service ConfService {

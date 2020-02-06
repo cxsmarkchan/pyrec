@@ -17,17 +17,16 @@
 #ifndef PYREC_CORE_SERVICE_RECOMMEND_H_
 #define PYREC_CORE_SERVICE_RECOMMEND_H_
 
-#include "pyrec/core/service/base.h"
+#include "pyrec/proto/recommend.hlrpc.pb.h"
+#include "pyrec/core/util/status.h"
 
 namespace pyrec {
 namespace service {
 
 class RecommendServer final :
-    public BaseServer<RecommendService,
-                      PyRecRequest,
-                      ItemReply> {
-  pyrec::Status ServingProcess(const PyRecRequest* request,
-                               ItemReply* reply) override;
+    public RecommendServiceHybridBase {
+  pyrec::Status OnRecommendProcess(const PyRecRequest* request,
+                                   ItemReply* reply) override;
 };
 
 }  // namespace service

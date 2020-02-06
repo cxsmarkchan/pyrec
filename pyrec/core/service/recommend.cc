@@ -21,8 +21,8 @@
 namespace pyrec {
 namespace service {
 
-pyrec::Status RecommendServer::ServingProcess(const PyRecRequest* request,
-                                              ItemReply* reply) {
+pyrec::Status RecommendServer::OnRecommendProcess(const PyRecRequest* request,
+                                                  ItemReply* reply) {
   reply->set_request_id(boost::str(boost::format("%s-%s")
         % request->request_id()
         % request->request_id()));

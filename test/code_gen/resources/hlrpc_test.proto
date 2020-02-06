@@ -1,0 +1,23 @@
+/* Copyright The PyRec Authors. All Rights Reserved.
+ * This file is only used for test.
+ */
+
+import "/path/to/imported.proto";
+
+package test.code_gen;
+
+// The CodeGen module of LocalRemoteProcessCall
+// will not check the grammar of message.
+message TestMessage {
+  message TestMessageInner {
+    repeated int32 id = 1;
+  }
+  repeated TestMessageInner inner = 1;
+}
+
+// The rpc module will be parsed.
+service TestService {
+  rpc TestRpc(module.request.Request/*comment*/) // comment
+    returns (module.reply.Reply) {} /* comment */
+  rpc TestRpc2(module.request.Request2) returns (module.reply.Reply2) {}
+}
