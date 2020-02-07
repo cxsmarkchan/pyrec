@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef PYREC_CORE_SERVICE_RECOMMEND_H_
-#define PYREC_CORE_SERVICE_RECOMMEND_H_
+#ifndef PYREC_CORE_RECOMMEND_RECOMMEND_H_
+#define PYREC_CORE_RECOMMEND_RECOMMEND_H_
 
 #include "pyrec/proto/recommend.hlrpc.pb.h"
 #include "pyrec/core/util/status.h"
@@ -32,4 +32,4 @@ class RecommendServer final :
 }  // namespace service
 }  // namespace pyrec
 
-#endif  // PYREC_CORE_SERVICE_RECOMMEND_H_
+#endif  // PYREC_CORE_RECOMMEND_RECOMMEND_H_

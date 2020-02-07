@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "pyrec/core/service/recommend.h"
+#include "pyrec/core/recommend/recommend.h"
 
 #include <boost/format.hpp>
 

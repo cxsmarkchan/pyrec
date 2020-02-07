@@ -1,7 +1,7 @@
 %module pyrec
 %{
   #include "pyrec/core/service/base.h"
-  #include "pyrec/core/service/recommend.h"
+  #include "pyrec/core/recommend/recommend.h"
 %}
 
 namespace pyrec {

@@ -9,10 +9,14 @@ filegroup(
 )
 
 cc_library(
-    name = "base",
-    hdrs = ["base.h"],
+    name = "recommend",
+    srcs = ["recommend.cc"],
+    hdrs = ["recommend.h"],
     deps = [
+        "@com_github_grpc_grpc//:grpc++",
+        "//pyrec/proto:recommend_cc_proto",
         "//pyrec/core/util:util",
+        "//pyrec/core/service:base",
     ],
     visibility = ["//visibility:public"],
 )

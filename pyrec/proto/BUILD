@@ -31,16 +31,16 @@ py_proto_library(
 )
 
 hlrpc_cc_proto_library(
-    name = "index_cc_proto",
-    srcs = ["index.proto"],
+    name = "indexer_cc_proto",
+    srcs = ["indexer.proto"],
     deps = [":feature_cc_proto"],
     use_grpc_plugin = True,
     use_hlrpc_plugin = True,
 )
 
 py_proto_library(
-    name = "index_py_proto",
-    srcs = ["index.proto"],
+    name = "indexer_py_proto",
+    srcs = ["indexer.proto"],
     deps = [":feature_py_proto"],
     use_grpc_plugin = True,
 )

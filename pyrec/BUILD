@@ -6,7 +6,7 @@ package(
 py_wrap_cc(
     name = "pywrap_core",
     srcs = ["pyrec.i"],
-    deps = ["//pyrec/core/service:service",
+    deps = ["//pyrec/core/recommend:recommend",
             "@local_config_python//:python_headers"],
     visibility = ["//visibility:public"]
 )
