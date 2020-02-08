@@ -4,6 +4,9 @@ package(
 
 filegroup(
     name = "cc_files",
-    srcs = ["//test/core/util:cc_files"],
+    srcs = [
+        "//test/core/util:cc_files",
+        "//test/core/indexer:cc_files",
+    ],
     visibility = ["//test:__pkg__"],
 )

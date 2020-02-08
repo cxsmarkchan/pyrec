@@ -21,8 +21,8 @@ package pyrec.service;
 import "pyrec/proto/feature.proto";
 
 message IndexItem {
-  pyrec.feature.FeatureMap item_id = 1;
-  map<int32, pyrec.feature.FeatureMap> feature_map = 2;
+  map<int32, pyrec.feature.FeatureList> keys = 1;
+  map<int32, pyrec.feature.FeatureList> fields = 2;
 }
 
 message MatchSearchItem {
@@ -66,8 +66,8 @@ message SearchRequest {
 // Ids: the list of searched ids.
 // Requested Fields: fields needed to be returned, if none, all fields.
 message ForwardIndexerRequest {
-  int32 type = 1;
-  repeated bytes ids = 2;
+  int32 key_id = 1;
+  repeated bytes keys = 2;
   repeated int32 requested_fields = 3;
 }
 

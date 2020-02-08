@@ -8,6 +8,7 @@ filegroup(
         "//pyrec/core/util:cc_files",
          "//pyrec/core/service:cc_files",
          "//pyrec/core/recommend:cc_files",
+         "//pyrec/core/indexer:cc_files",
     ],
     visibility = ["//pyrec:__pkg__"]
 )

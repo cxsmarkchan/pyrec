@@ -9,14 +9,14 @@ filegroup(
 )
 
 cc_library(
-    name = "util",
-    srcs = ["status.cc"],
-    hdrs = ["status.h",
-            "ip.h",
-            "type.h"],
+    name = "hash_indexer",
+    srcs = ["hash_indexer.cc"],
+    hdrs = ["hash_indexer.h"],
     deps = [
-        "@com_github_grpc_grpc//:grpc++",
-        "@boost//:format",
+        "//pyrec/proto:indexer_cc_proto",
+        "//pyrec/core/util:util",
+        "@boost//:algorithm",
+        "@boost//:lexical_cast",
     ],
     visibility = ["//visibility:public"],
 )
