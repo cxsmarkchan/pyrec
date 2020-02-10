@@ -26,11 +26,14 @@
 namespace pyrec {
 namespace service {
 
+using pyrec::types::FieldId;
+using pyrec::types::CsvFormat;
+
 // Currently we only support inserting an item, rather than updating an item,
 // which means this function returns null if the id exists in the index.
 int HashIndexerServer::InsertItemFromCsvLine(
     const std::string& line,
-    const HashIndexerServer::CsvFormat& format,
+    const CsvFormat& format,
     std::string* pt_item_id,
     const HashIndexerServer::IndexItem** pt_index_item) {
   // TODO(cxsmarkchan): design of the ret code
@@ -86,15 +89,15 @@ void HashIndexerServer::InsertIntoInvertedIndexes(
   }
 }
 
-std::unique_ptr<HashIndexerServer> HashIndexerServer::CreateFromCsv(
+std::shared_ptr<HashIndexerServer> HashIndexerServer::CreateFromCsv(
     std::istream& stream,
-    const HashIndexerServer::CsvFormat& format) {
+    const CsvFormat& format) {
   // TODO(cxsmarkchan): exception when field_ids contains duplicated keys.
 
   if (!stream || format.field_ids.size() == 0)
     return nullptr;
 
-  auto server = std::unique_ptr<HashIndexerServer>(
+  auto server = std::shared_ptr<HashIndexerServer>(
       new HashIndexerServer(format.field_ids[0]));
 
   std::string line;
@@ -114,7 +117,7 @@ std::unique_ptr<HashIndexerServer> HashIndexerServer::CreateFromCsv(
 void HashIndexerServer::FillReplyItem(
     const std::string& item_key,
     const HashIndexerServer::IndexItem& index_item,
-    const std::unordered_set<pyrec::FieldIdType>& requested_fields,
+    const std::unordered_set<FieldId>& requested_fields,
     IndexerReply* reply) {
   auto* reply_item = reply->add_items();
 
@@ -137,7 +140,7 @@ void HashIndexerServer::FillReplyItem(
   }
 }
 
-pyrec::Status HashIndexerServer::OnForwardProcess(
+pyrec::Status HashIndexerServer::ForwardProcess(
     const ForwardIndexerRequest* request,
     IndexerReply* reply) {
   if (request->key_id() != key_id_) {
@@ -145,7 +148,7 @@ pyrec::Status HashIndexerServer::OnForwardProcess(
     return pyrec::Status::CANCELLED;
   }
 
-  std::unordered_set<pyrec::FieldIdType> requested_fields;
+  std::unordered_set<FieldId> requested_fields;
   for (auto& field_id : request->requested_fields()) {
     requested_fields.insert(field_id);
   }
@@ -252,7 +255,7 @@ void HashIndexerServer::ProcessSingleSearchRequest(
   }
 }
 
-pyrec::Status HashIndexerServer::OnInvertedProcess(
+pyrec::Status HashIndexerServer::InvertedProcess(
     const InvertedIndexerRequest* request,
     IndexerReply* reply) {
   std::unordered_set<std::string> result_keys;
@@ -264,7 +267,7 @@ pyrec::Status HashIndexerServer::OnInvertedProcess(
                                request->max_num());
   }
 
-  std::unordered_set<pyrec::FieldIdType> requested_fields;
+  std::unordered_set<FieldId> requested_fields;
   for (auto& field_id : request->requested_fields()) {
     requested_fields.insert(field_id);
   }

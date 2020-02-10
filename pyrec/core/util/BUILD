@@ -13,7 +13,7 @@ cc_library(
     srcs = ["status.cc"],
     hdrs = ["status.h",
             "ip.h",
-            "type.h"],
+            "types.h"],
     deps = [
         "@com_github_grpc_grpc//:grpc++",
         "@boost//:format",

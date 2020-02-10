@@ -6,7 +6,12 @@ package(
 py_wrap_cc(
     name = "pywrap_core",
     srcs = ["pyrec.i"],
+    swig_includes = [
+        "indexer/indexer.i",
+        "//tools/swig:swig_tools",
+    ],
     deps = ["//pyrec/core/recommend:recommend",
+            "//pyrec/core/indexer:hash_indexer",
             "@local_config_python//:python_headers"],
     visibility = ["//visibility:public"]
 )
@@ -31,7 +36,7 @@ filegroup(
 
 py_library(
     name = "service",
-    srcs = glob(["service/*.py"]),
+    srcs = glob(["**/*.py"]),
     deps = [
         "//pyrec/proto:recommend_py_proto",
         "//pyrec:pywrap_core",

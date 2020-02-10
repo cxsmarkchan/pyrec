@@ -36,6 +36,9 @@ class Status {
   Status(StatusCode code, std::string error_message) :
       code_(code),
       error_message_(error_message) {}
+  explicit Status(grpc::Status grpc_status) :
+      code_(static_cast<pyrec::StatusCode>(grpc_status.error_code())),
+      error_message_(grpc_status.error_message()) {}
 
   grpc::Status ToGrpcStatus() {
     return grpc::Status(grpc::StatusCode(code_), grpc::string(error_message_));

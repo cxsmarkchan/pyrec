@@ -5,8 +5,8 @@ filegroup(
 )
 
 cc_test(
-    name = "ip_test",
-    srcs = ["ip_test.cc"],
+    name = "util_test",
+    srcs = glob(["**/*.cc"]),
     deps = [
         "//pyrec/core/util:util",
         "@com_google_googletest//:gtest_main",

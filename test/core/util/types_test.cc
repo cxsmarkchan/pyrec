@@ -14,15 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef PYREC_CORE_UTIL_TYPE_H_
-#define PYREC_CORE_UTIL_TYPE_H_
+#define private public
+#define protected public
 
-#include <cstdint>
+#include "gtest/gtest.h"
 
-namespace pyrec {
+#include "pyrec/core/util/types.h"
 
-typedef int32_t FieldIdType;
+class TypesTest : public testing::Test {
+ public:
+  void SetUp() {}
+  void TearDown() {}
+};
 
-}  // namespace pyrec
-
-#endif  // PYREC_CORE_UTIL_TYPE_H_
+TEST(TypesTest, DoDebugStringTest) {
+  pyrec::types::CsvFormat csv_format;
+  csv_format.field_ids = {101, 102, 103};
+  csv_format.between_delimiter = ";";
+  csv_format.inner_delimiter = ":";
+  ASSERT_EQ(csv_format.DebugString(),
+            "between_delimiter: \";\", inner_delimiter: \":\", "
+            "field_ids: 101 102 103");
+}

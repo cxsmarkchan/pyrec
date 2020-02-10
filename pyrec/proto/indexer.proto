@@ -93,6 +93,6 @@ message IndexerReply {
 }
 
 service IndexerService {
-  rpc OnForward(ForwardIndexerRequest) returns (IndexerReply) {}
-  rpc OnInverted(InvertedIndexerRequest) returns (IndexerReply) {}
+  rpc Forward(ForwardIndexerRequest) returns (IndexerReply) {}
+  rpc Inverted(InvertedIndexerRequest) returns (IndexerReply) {}
 }

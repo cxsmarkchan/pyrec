@@ -21,15 +21,19 @@
 #include <sstream>
 
 #include "gtest/gtest.h"
+
+#include "pyrec/core/util/types.h"
 #include "pyrec/core/indexer/hash_indexer.h"
 
 using pyrec::service::HashIndexerServer;
+using pyrec::types::FieldId;
+using pyrec::types::CsvFormat;
 
 namespace {
 
 std::string ExtractKeyFromProto(
     const pyrec::service::IndexItem& index_item_proto,
-    pyrec::FieldIdType key_id) {
+    FieldId key_id) {
   auto it = index_item_proto.keys().find(key_id);
   if (it == index_item_proto.keys().end())
     return "";
@@ -53,7 +57,7 @@ HashIndexerServer::IndexItem ExtractIndexItemFromProto(
 }
 
 void CheckReplyItem(const pyrec::service::IndexItem& index_item,
-                    pyrec::FieldIdType key_id,
+                    FieldId key_id,
                     const std::string& expected_key,
                     const HashIndexerServer::IndexItem& expected_index_item) {
   std::string key = ExtractKeyFromProto(index_item, key_id);
@@ -74,7 +78,7 @@ class HashIndexerTest : public testing::Test {
     ss << "key4,101_1,102_3,103_2" << std::endl;
     ss << "key5,101_2,102_2:102_4" << std::endl;
     ss << ",101_2,102_2:102_4,103_1" << std::endl;
-    HashIndexerServer::CsvFormat format;
+    CsvFormat format;
     format.field_ids = {100, 101, 102, 103};
     format.between_delimiter = ",";
     format.inner_delimiter = ":";
@@ -85,7 +89,7 @@ class HashIndexerTest : public testing::Test {
   void TearDown() {}
 
  private:
-  std::unique_ptr<HashIndexerServer> server_;
+  std::shared_ptr<HashIndexerServer> server_;
 };
 
 TEST_F(HashIndexerTest, DoCreateTest) {
@@ -105,7 +109,7 @@ TEST_F(HashIndexerTest, DoCreateTest) {
                 {102, {"102_2", "102_4"}}}}
   };
 
-  std::unordered_map<pyrec::FieldIdType,
+  std::unordered_map<FieldId,
       HashIndexerServer::InvertedIndex> expected_inverted_indexes = {
       {101, {{"101_1", {"key1", "key4"}},
              {"101_2", {"key2", "key3", "key5"}}}},
@@ -134,7 +138,7 @@ TEST_F(HashIndexerTest, DoForward) {
   request.add_requested_fields(103);
   request.add_requested_fields(104);
 
-  server_->OnForwardProcess(&request, &reply);
+  server_->ForwardProcess(&request, &reply);
   ASSERT_EQ(reply.items_size(), 2);
   CheckReplyItem(reply.items(0), 100, "key1",
                    {{101, {"101_1"}},
@@ -144,7 +148,7 @@ TEST_F(HashIndexerTest, DoForward) {
 
   reply.Clear();
   request.set_key_id(200);
-  server_->OnForwardProcess(&request, &reply);
+  server_->ForwardProcess(&request, &reply);
   ASSERT_EQ(reply.items_.size(), 0);
 }
 
@@ -165,7 +169,7 @@ TEST_F(HashIndexerTest, DoInverted) {
   (*search_items)[102].mutable_match_search_item()->set_bytes_value("102_2");
   (*search_items)[101].mutable_match_search_item()->set_bytes_value("101_2");
 
-  server_->OnInvertedProcess(&request, &reply);
+  server_->InvertedProcess(&request, &reply);
   ASSERT_EQ(reply.items().size(), 4);
   key_set = {"key1", "key3", "key4", "key5"};
   for (auto& item : reply.items()) {
@@ -177,7 +181,7 @@ TEST_F(HashIndexerTest, DoInverted) {
 
   reply.Clear();
   request.set_max_num(3);
-  server_->OnInvertedProcess(&request, &reply);
+  server_->InvertedProcess(&request, &reply);
   ASSERT_EQ(reply.items().size(), 3);
   key_set = {"key1", "key3", "key4", "key5"};
   for (auto& item : reply.items()) {
@@ -189,7 +193,7 @@ TEST_F(HashIndexerTest, DoInverted) {
 
   reply.Clear();
   request.set_max_num(2);
-  server_->OnInvertedProcess(&request, &reply);
+  server_->InvertedProcess(&request, &reply);
   ASSERT_EQ(reply.items().size(), 2);
   key_set = {"key1", "key4"};
   for (auto& item : reply.items()) {

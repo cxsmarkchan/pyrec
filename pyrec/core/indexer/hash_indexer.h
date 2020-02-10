@@ -23,10 +23,12 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <istream>
+#include <fstream>
 
 #include "pyrec/core/util/status.h"
-#include "pyrec/core/util/type.h"
+#include "pyrec/core/util/types.h"
 #include "pyrec/proto/indexer.hlrpc.pb.h"
+#include "pyrec/core/indexer/indexer_interface.h"
 
 namespace pyrec {
 namespace service {
@@ -42,30 +44,29 @@ class HashIndexerServer final :
 
   typedef std::vector<std::string> IndexField;
   // TODO(cxsmarkchan): IndexItem can be a vector rather than a hash map.
-  typedef std::unordered_map<pyrec::FieldIdType, IndexField> IndexItem;
+  typedef std::unordered_map<pyrec::types::FieldId, IndexField> IndexItem;
   typedef std::vector<std::string> InvertedItems;
   typedef std::unordered_map<std::string, InvertedItems> InvertedIndex;
-  struct CsvFormat {
-    std::vector<pyrec::FieldIdType> field_ids;
-    std::string between_delimiter = ",";
-    std::string inner_delimiter = "";
-  };
 
-  static std::unique_ptr<HashIndexerServer> CreateFromCsv(
+  static std::shared_ptr<HashIndexerServer> CreateFromCsv(
       std::istream& stream,
-      const CsvFormat& format);
+      const pyrec::types::CsvFormat& format);
 
  public:
-  pyrec::Status OnForwardProcess(const ForwardIndexerRequest* request,
-                                 IndexerReply* reply) override;
-  pyrec::Status OnInvertedProcess(const InvertedIndexerRequest* request,
+  size_t IndexSize() const {
+    return forward_index_.size();
+  }
+
+  pyrec::Status ForwardProcess(const ForwardIndexerRequest* request,
+                               IndexerReply* reply) override;
+  pyrec::Status InvertedProcess(const InvertedIndexerRequest* request,
                                   IndexerReply* reply) override;
 
  private:
-  explicit HashIndexerServer(pyrec::FieldIdType key_id = 0)
+  explicit HashIndexerServer(pyrec::types::FieldId key_id = 0)
       : key_id_(key_id) {}
   int InsertItemFromCsvLine(const std::string& line,
-                            const CsvFormat& format,
+                            const pyrec::types::CsvFormat& format,
                             std::string* item_id,
                             const IndexItem** item);
   void InsertIntoInvertedIndexes(const std::string& item_key,
@@ -73,7 +74,7 @@ class HashIndexerServer final :
   void FillReplyItem(
       const std::string& item_key,
       const IndexItem& index_item,
-      const std::unordered_set<pyrec::FieldIdType>& requested_fields,
+      const std::unordered_set<pyrec::types::FieldId>& requested_fields,
       IndexerReply* reply);
   void ProcessSingleSearchRequest(
       const pyrec::service::SearchRequest& search_request,
@@ -81,9 +82,41 @@ class HashIndexerServer final :
       int max_num);
 
  private:
-  pyrec::FieldIdType key_id_;  // the field id of key
+  pyrec::types::FieldId key_id_;  // the field id of key
   std::unordered_map<std::string, IndexItem> forward_index_;
-  std::unordered_map<pyrec::FieldIdType, InvertedIndex> inverted_indexes_;
+  std::unordered_map<pyrec::types::FieldId, InvertedIndex> inverted_indexes_;
+};
+
+class HashIndexerServerInterface : public IndexerServiceInterface {
+ public:
+  int CreateFromCsv(const char* file_name,
+      const pyrec::types::CsvFormat& format) {
+    std::ifstream stream(file_name);
+    if (!stream)
+      return -1;
+    server_ = HashIndexerServer::CreateFromCsv(stream, format);
+    if (server_ == nullptr)
+      return -1;
+    return 0;
+  }
+
+  size_t IndexSize() const {
+    return std::dynamic_pointer_cast<HashIndexerServer>(server_)->IndexSize();
+  }
+};  // class HashIndexerServerInterface
+
+class PseudoClient {
+ public:
+  PseudoClient() : server_(nullptr) {}
+  void SetIndexer(HashIndexerServerInterface& interface) {
+    server_ = std::dynamic_pointer_cast<HashIndexerServer>(
+        interface.GetServer());
+  }
+  size_t IndexSize() const {
+    return server_->IndexSize();
+  }
+ private:
+  std::shared_ptr<HashIndexerServer> server_;
 };
 
 }  // namespace service
