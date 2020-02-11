@@ -70,6 +70,7 @@ def _py_wrap_cc_impl(ctx):
     args = [
         "-c++",
         "-python",
+        "-threads",
         "-module",
         module_name,
         "-o",
