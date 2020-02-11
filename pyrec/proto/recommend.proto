@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The PyRec Authors. All Rights Reserved.
+ * Copyright 2020 cxsmarkchan. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,18 +28,25 @@ message Conf {
   repeated ConfItem items = 1;
 }
 
-message TriggerInfo {
-  int32 trigger_id = 1;
+// The information of retrieval, including:
+// - retrieval_id: the id of retrieval.
+// - score: the score provided by the retrieval algorithm.
+// - rank: the rank of the item out of all the items retrieved.
+// - num_items: the total number of items retrived by this algorithm.
+// The score and the rank can be absent if the retrieval algorithm tends to
+// equally recommend all the items.
+message RetrievalInfo {
+  int32 retrieval_id = 1;
   float score = 2;
   int32 rank = 3;
-  float rank_ratio = 4;
+  int32 num_items = 4;
 }
 
 message ItemInfo {
   // We use FeatureMap instead of string for item_id,
   // since an item may have multiple ids from different source
-  pyrec.feature.FeatureMap item_id = 1;
-  repeated TriggerInfo trigger_info = 2;
+  map<int32, pyrec.feature.FeatureList> item_id = 1;
+  repeated RetrievalInfo retrieval_infos = 2;
   map<int32, float> scores = 3;
 }
 
@@ -79,7 +86,7 @@ service ContextService {
 }
 
 service RetrievalService {
-  rpc OnRetrieval(PyRecRequest) returns (ItemReply) {}
+  rpc Retrieval(PyRecRequest) returns (ItemReply) {}
 }
 
 service RankingService {
