@@ -105,20 +105,6 @@ class HashIndexerServerInterface : public IndexerServiceInterface {
   }
 };  // class HashIndexerServerInterface
 
-class PseudoClient {
- public:
-  PseudoClient() : server_(nullptr) {}
-  void SetIndexer(HashIndexerServerInterface& interface) {
-    server_ = std::dynamic_pointer_cast<HashIndexerServer>(
-        interface.GetServer());
-  }
-  size_t IndexSize() const {
-    return server_->IndexSize();
-  }
- private:
-  std::shared_ptr<HashIndexerServer> server_;
-};
-
 }  // namespace service
 }  // namespace pyrec
 

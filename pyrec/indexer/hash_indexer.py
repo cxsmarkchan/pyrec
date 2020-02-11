@@ -13,37 +13,58 @@
 # limitations under the License.
 # ==============================================================================
 """Interfaces of HashIndexerServer."""
-from pyrec import pywrap_core
+
+from pyrec.pywrap_core import HashIndexerServerInterface
 from pyrec.util.types import CsvFormat
 
 from pyrec.indexer.indexer_base import IndexerServicePyBase
 
+
 class HashIndexerServer(IndexerServicePyBase):
   """Server of the recommender service system."""
+  INPUT_UNKNOWN = 0
+  INPUT_CSV = 1
   def __init__(self):
     """Init function."""
-    self._server = pywrap_core.HashIndexerServerInterface()
-    self._created = False
+    super().__init__()
+    self._server = None
+    self._input_type = self.INPUT_UNKNOWN
+    self._csv_name = ''
+    self._csv_format = CsvFormat(field_ids=[])
 
-  @property
-  def created(self):
-    """
-    :return: whether the server has been created
-    """
-    return self._created
-
-  def create_server(self, csv_name, csv_format):
-    """
-    Create the hash indexer server
-    :param csv_name: the csv file which contains the item information.
-    :param csv_format: the csv format
-    :return:
-    """
+  def set_input_csv(self, csv_name, csv_format):
+    """;"""
     assert isinstance(csv_name, str)
     assert isinstance(csv_format, CsvFormat)
-    ret = self._server.CreateFromCsv(csv_name, csv_format.to_core_type())
-    if ret == 0:
-      self._created = True
+    self._csv_name = csv_name
+    self._csv_format = csv_format
+    self._input_type = self.INPUT_CSV
+    return self
+
+  def _create_server_from_csv(self):
+    """
+    Create a hash indexer from a csv file.
+    :return: True if create successfully, and False otherwise.
+    """
+    assert self._input_type == self.INPUT_CSV
+    assert len(self._csv_name) > 0
+    self._server = HashIndexerServerInterface()
+    ret = self._server.CreateFromCsv(self._csv_name,
+                                     self._csv_format.to_core_type())
+    return ret == 0
+
+  def _create_server_impl(self):
+    """
+    Create the hash indexer server
+    :return:
+    """
+    create_function_dict = {
+        self.INPUT_CSV: self._create_server_from_csv
+    }
+    assert self._input_type in create_function_dict
+    ret = create_function_dict[self._input_type]()
+    self._created = ret
+    return ret
 
   def index_size(self):
     """

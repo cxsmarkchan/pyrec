@@ -27,29 +27,35 @@
 namespace pyrec {
 namespace service {
 
-class IndexerClient {
+class IndexerClientInternal {
  public:
-  virtual ~IndexerClient() {}
-  virtual pyrec::Status CallForward(const ForwardIndexerRequest& request,
-                                    IndexerReply* reply) = 0;
-  virtual pyrec::Status CallInverted(const InvertedIndexerRequest& request,
-                                     IndexerReply* reply) = 0;
+  virtual ~IndexerClientInternal() {}
+  virtual pyrec::Status CallForward(
+      const pyrec::service::ForwardIndexerRequest& request,
+      pyrec::service::IndexerReply* reply) = 0;
+  virtual pyrec::Status CallInverted(
+      const pyrec::service::InvertedIndexerRequest& request,
+      pyrec::service::IndexerReply* reply) = 0;
 };
 
-class LocalIndexerClient : public IndexerClient {
+class LocalIndexerClientInternal : public IndexerClientInternal {
  public:
-  explicit LocalIndexerClient(const IndexerServiceInterface& server_interface)
+  explicit LocalIndexerClientInternal(
+      const pyrec::service::IndexerServiceInterface& server_interface)
       : server_(server_interface.GetServer()) {}
-  explicit LocalIndexerClient(std::shared_ptr<IndexerServiceHybridBase> server)
+  explicit LocalIndexerClientInternal(
+      std::shared_ptr<pyrec::service::IndexerServiceHybridBase> server)
       : server_(server) {}
 
-  pyrec::Status CallForward(const ForwardIndexerRequest& request,
-                            IndexerReply* reply) override {
+  pyrec::Status CallForward(
+      const pyrec::service::ForwardIndexerRequest& request,
+      pyrec::service::IndexerReply* reply) override {
     return server_->ForwardLocal(&request, reply);
   }
 
-  pyrec::Status CallInverted(const InvertedIndexerRequest& request,
-                             IndexerReply* reply) override {
+  pyrec::Status CallInverted(
+      const pyrec::service::InvertedIndexerRequest& request,
+      pyrec::service::IndexerReply* reply) override {
     return server_->InvertedLocal(&request, reply);
   }
 
@@ -57,23 +63,24 @@ class LocalIndexerClient : public IndexerClient {
   std::shared_ptr<IndexerServiceHybridBase> server_;
 };
 
-class RemoteIndexerClient : public IndexerClient {
+class RemoteIndexerClientInternal : public IndexerClientInternal {
  public:
-  RemoteIndexerClient(const char* ip, int port)
+  RemoteIndexerClientInternal(const char* ip, int port)
       : remote_address_({ip, port}) {
     Connect();
   }
-  explicit RemoteIndexerClient(const pyrec::Address remote_address)
+  explicit RemoteIndexerClientInternal(const pyrec::Address remote_address)
       : remote_address_(remote_address) {
     Connect();
   }
 
-  ~RemoteIndexerClient() {
+  ~RemoteIndexerClientInternal() {
     Disconnect();
   }
 
-  pyrec::Status CallForward(const ForwardIndexerRequest& request,
-                            IndexerReply* reply) override {
+  pyrec::Status CallForward(
+      const pyrec::service::ForwardIndexerRequest& request,
+      pyrec::service::IndexerReply* reply) override {
     if (!Ping())
       return pyrec::Status::CANCELLED;
 
@@ -84,8 +91,9 @@ class RemoteIndexerClient : public IndexerClient {
     return pyrec::Status(status);
   }
 
-  pyrec::Status CallInverted(const InvertedIndexerRequest& request,
-                             IndexerReply* reply) override {
+  pyrec::Status CallInverted(
+      const pyrec::service::InvertedIndexerRequest& request,
+      pyrec::service::IndexerReply* reply) override {
     if (!Ping())
       return pyrec::Status::CANCELLED;
 

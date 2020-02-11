@@ -4,6 +4,8 @@
   #include "pyrec/core/indexer/hash_indexer.h"
 %}
 
+%include "pyrec/core/indexer/indexer_client.h"
+
 namespace pyrec {
 namespace service {
 
@@ -17,15 +19,6 @@ class HashIndexerServerInterface : public IndexerServiceInterface {
   int CreateFromCsv(const char* file_name,
                     const pyrec::types::CsvFormat& format);
   size_t IndexSize() const;
-};
-
-class LocalIndexerClient {
- public:
-  explicit LocalIndexerClient(const IndexerServiceInterface& server_interface);
-};
-
-class RemoteIndexerClient : public IndexerClient {
-  explicit RemoteIndexerClient(const char* ip, int port);
 };
 
 }  // namespace service

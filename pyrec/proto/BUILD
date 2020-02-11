@@ -5,6 +5,26 @@ package(
     licenses = ["notice"],  # Apache 2.0
 )
 
+cc_library(
+    name = "pyrec_cc_proto",
+    deps = [
+        ":recommend_cc_proto",
+        ":feature_cc_proto",
+        ":indexer_cc_proto",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+py_library(
+    name = "pyrec_py_proto",
+    deps = [
+        ":recommend_py_proto",
+        ":feature_py_proto",
+        ":indexer_py_proto",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 hlrpc_cc_proto_library(
     name = "recommend_cc_proto",
     srcs = ["recommend.proto"],

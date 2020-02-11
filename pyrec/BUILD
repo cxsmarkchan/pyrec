@@ -38,7 +38,7 @@ py_library(
     name = "service",
     srcs = glob(["**/*.py"]),
     deps = [
-        "//pyrec/proto:recommend_py_proto",
+        "//pyrec/proto:pyrec_py_proto",
         "//pyrec:pywrap_core",
     ],
     data = [
