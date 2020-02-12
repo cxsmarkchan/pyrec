@@ -21,8 +21,9 @@
 
 #include "grpcpp/grpcpp.h"
 
-#include "pyrec/core/util/ip.h"
 #include "pyrec/proto/indexer.hlrpc.pb.h"
+#include "pyrec/core/util/ip.h"
+#include "pyrec/core/indexer/indexer_interface.h"
 
 namespace pyrec {
 namespace service {

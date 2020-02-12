@@ -9,6 +9,7 @@
 
 %include "pyrec/core/util/types.h"
 %include "pyrec/indexer/indexer.i"
+%include "pyrec/retrieval/retrieval.i"
 
 namespace pyrec {
 namespace service {

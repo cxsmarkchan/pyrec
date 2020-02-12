@@ -9,22 +9,23 @@ filegroup(
 )
 
 cc_library(
-    name = "indexer_base",
+    name = "retrieval_base",
     hdrs = [
-        "indexer_interface.h",
-        "indexer_client.h",
+        "retrieval_interface.h",
+        "retrieval_client.h",
     ],
-    deps = ["//pyrec/proto:indexer_cc_proto"],
+    deps = ["//pyrec/proto:recommend_cc_proto"],
     visibility = ["//visibility:public"],
 )
 
 cc_library(
-    name = "hash_indexer",
-    srcs = ["hash_indexer.cc"],
-    hdrs = ["hash_indexer.h"],
+    name = "content_based",
+    srcs = ["content_based.cc"],
+    hdrs = ["content_based.h"],
     deps = [
-        ":indexer_base",
-        "//pyrec/proto:indexer_cc_proto",
+        ":retrieval_base",
+        "//pyrec/core/indexer:indexer_base",
+        "//pyrec/proto:recommend_cc_proto",
         "//pyrec/core/util:util",
         "@boost//:algorithm",
         "@boost//:lexical_cast",

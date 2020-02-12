@@ -4,6 +4,9 @@
   #include "pyrec/core/indexer/hash_indexer.h"
 %}
 
+%shared_ptr(pyrec::service::IndexerClientInternal)
+%shared_ptr(pyrec::service::RemoteIndexerClientInternal)
+%shared_ptr(pyrec::service::LocalIndexerClientInternal)
 %include "pyrec/core/indexer/indexer_client.h"
 
 namespace pyrec {

@@ -8,10 +8,12 @@ py_wrap_cc(
     srcs = ["pyrec.i"],
     swig_includes = [
         "indexer/indexer.i",
+        "retrieval/retrieval.i",
         "//tools/swig:swig_tools",
     ],
     deps = ["//pyrec/core/recommend:recommend",
             "//pyrec/core/indexer:hash_indexer",
+            "//pyrec/core/retrieval:content_based",
             "@local_config_python//:python_headers"],
     visibility = ["//visibility:public"]
 )
