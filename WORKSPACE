@@ -1,7 +1,7 @@
 workspace(name = "pyrec")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository", "new_git_repository")
 
 # cpp rules
 git_repository(
@@ -106,4 +106,22 @@ http_archive(
     urls = [
         "https://github.com/google/googletest/archive/release-1.10.0.tar.gz",
     ],
+)
+
+# librdkafka
+new_git_repository(
+    name = "librdkafka",
+    remote = "https://github.com/edenhill/librdkafka.git",
+    commit = "4ffe54b4f59ee5ae3767f9f25dc14651a3384d62",
+    build_file = "//third_party:librdkafka.BUILD",
+    shallow_since = "1575312008 +0100",
+)
+
+# hiredis
+new_git_repository(
+    name = "hiredis",
+    remote = "https://github.com/redis/hiredis",
+    commit = "685030652cd98c5414ce554ff5b356dfe8437870",
+    build_file = "//third_party:hiredis.BUILD",
+    shallow_since = "1537916374 -0400",
 )
