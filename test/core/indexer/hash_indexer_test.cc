@@ -34,8 +34,9 @@ namespace {
 std::string ExtractKeyFromProto(
     const pyrec::service::IndexItem& index_item_proto,
     FieldId key_id) {
-  auto it = index_item_proto.keys().find(key_id);
-  if (it == index_item_proto.keys().end())
+  auto& field_map = index_item_proto.fields().map_items();
+  auto it = field_map.find(key_id);
+  if (it == field_map.end())
     return "";
   auto& field_list = it->second.bytes_list();
   if (field_list.values_size() > 1)
@@ -46,7 +47,7 @@ std::string ExtractKeyFromProto(
 HashIndexerServer::IndexItem ExtractIndexItemFromProto(
     const pyrec::service::IndexItem& index_item_proto) {
   HashIndexerServer::IndexItem index_item;
-  for (auto& item : index_item_proto.fields()) {
+  for (auto& item : index_item_proto.fields().map_items()) {
     auto field_id = item.first;
     auto& value_list = item.second.bytes_list().values();
     for (auto& value : value_list) {
@@ -134,6 +135,7 @@ TEST_F(HashIndexerTest, DoForward) {
   request.add_keys("key1");
   request.add_keys("key6");
   request.add_keys("key5");
+  request.add_requested_fields(100);
   request.add_requested_fields(101);
   request.add_requested_fields(103);
   request.add_requested_fields(104);
@@ -141,10 +143,12 @@ TEST_F(HashIndexerTest, DoForward) {
   server_->ForwardProcess(&request, &reply);
   ASSERT_EQ(reply.items_size(), 2);
   CheckReplyItem(reply.items(0), 100, "key1",
-                   {{101, {"101_1"}},
+                   {{100, {"key1"}},
+                    {101, {"101_1"}},
                     {103, {"103_1"}}});
   CheckReplyItem(reply.items(1), 100, "key5",
-                   {{101, {"101_2"}}});
+                   {{100, {"key5"}},
+                    {101, {"101_2"}}});
 
   reply.Clear();
   request.set_key_id(200);
@@ -176,7 +180,9 @@ TEST_F(HashIndexerTest, DoInverted) {
     std::string key = ExtractKeyFromProto(item, 100);
     ASSERT_TRUE(key_set.find(key) != key_set.end());
     key_set.erase(key);
-    CheckReplyItem(item, 100, key, server_->forward_index_[key]);
+    HashIndexerServer::IndexItem copy_index = server_->forward_index_[key];
+    copy_index[100] = {key};
+    CheckReplyItem(item, 100, key, copy_index);
   }
 
   reply.Clear();
@@ -188,7 +194,9 @@ TEST_F(HashIndexerTest, DoInverted) {
     std::string key = ExtractKeyFromProto(item, 100);
     ASSERT_TRUE(key_set.find(key) != key_set.end());
     key_set.erase(key);
-    CheckReplyItem(item, 100, key, server_->forward_index_[key]);
+    HashIndexerServer::IndexItem copy_index = server_->forward_index_[key];
+    copy_index[100] = {key};
+    CheckReplyItem(item, 100, key, copy_index);
   }
 
   reply.Clear();
@@ -200,6 +208,8 @@ TEST_F(HashIndexerTest, DoInverted) {
     std::string key = ExtractKeyFromProto(item, 100);
     ASSERT_TRUE(key_set.find(key) != key_set.end());
     key_set.erase(key);
-    CheckReplyItem(item, 100, key, server_->forward_index_[key]);
+    HashIndexerServer::IndexItem copy_index = server_->forward_index_[key];
+    copy_index[100] = {key};
+    CheckReplyItem(item, 100, key, copy_index);
   }
 }

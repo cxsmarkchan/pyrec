@@ -24,6 +24,7 @@ class CBRetrievalServerInterface : public RetrievalServiceInterface {
   const CBRetrievalServerInterface& SetIndexer(
       std::shared_ptr<IndexerClientInternal>);
   const CBRetrievalServerInterface& SetRetrievalId(pyrec::types::FieldId);
+  const CBRetrievalServerInterface& AddItemKey(pyrec::types::FieldId);
   const CBRetrievalServerInterface& SetRequestNum(int);
   const CBRetrievalServerInterface& AddFilterRule(
       pyrec::types::FieldId key, const std::string& value);

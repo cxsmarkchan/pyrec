@@ -121,11 +121,16 @@ void HashIndexerServer::FillReplyItem(
     IndexerReply* reply) {
   auto* reply_item = reply->add_items();
 
-  auto* reply_item_key_map = reply_item->mutable_keys();
-  auto& reply_item_key = (*reply_item_key_map)[key_id_];
-  reply_item_key.mutable_bytes_list()->add_values(item_key);
+  auto* reply_item_field_map = reply_item->mutable_fields() \
+                                         ->mutable_map_items();
 
-  auto* reply_item_field_map = reply_item->mutable_fields();
+  // Here we need to separately deal with key since
+  //  it does not exist in the values of the forward map.
+  if (requested_fields.empty() ||
+      requested_fields.find(key_id_) != requested_fields.end()) {
+    auto& reply_item_field = (*reply_item_field_map)[key_id_];
+    reply_item_field.mutable_bytes_list()->add_values(item_key);
+  }
 
   for (auto& item : index_item) {
     auto field_id = item.first;

@@ -50,6 +50,23 @@ class CBRetrievalServer(RetrievalServicePyBase):
     self._request_num = request_num
     return self
 
+  def set_item_keys(self, item_keys):
+    """
+    Set the filter rules, which are used to retrieve only part of the items
+    from the index.
+    :param filter_rule:
+    :return:
+    """
+    if isinstance(item_keys, int):
+      self._item_keys = [item_keys]
+    elif isinstance(item_keys, list):
+      self._item_keys = item_keys
+    else:
+      raise TypeError(item_keys)
+
+    return self
+
+
   def set_filter_rule(self, filter_rule):
     """
     Set the filter rules, which are used to retrieve only part of the items
@@ -94,6 +111,10 @@ class CBRetrievalServer(RetrievalServicePyBase):
 
     for key, value in self._filter_rule.items():
       self._server.AddFilterRule(key, value)
+
+    for key in self._item_keys:
+      self._server.AddItemKey(key)
+
     return self._server.Create() == 0
 
   def get_server(self):

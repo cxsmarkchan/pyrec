@@ -80,14 +80,16 @@ class TestHashIndexer(unittest.TestCase):
 
     forward_request = ForwardIndexerRequest(key_id=100)
     forward_request.keys.append('key1'.encode())
+    forward_request.requested_fields.append(100)
     forward_request.requested_fields.append(101)
 
     response = client.request_forward(forward_request)
     self.assertEqual(len(response.items), 1)
-    self.assertEqual(response.items[0].keys[100].bytes_list.values[0],
-                     'key1'.encode())
-    self.assertEqual(response.items[0].fields[101].bytes_list.values[0],
-                     '101_1'.encode())
+    self.assertEqual(
+        response.items[0].fields.map_items[100].bytes_list.values[0],
+        'key1'.encode())
+    self.assertEqual(response.items[0].fields.map_items[101]
+                     .bytes_list.values[0], '101_1'.encode())
 
     inverted_request = InvertedIndexerRequest(max_num=10)
     search_request = SearchRequest()
@@ -96,13 +98,16 @@ class TestHashIndexer(unittest.TestCase):
     search_request.search_items[103].match_search_item \
         .bytes_value = '103_1'.encode()
     inverted_request.search_requests.append(search_request)
+    inverted_request.requested_fields.append(100)
     inverted_request.requested_fields.append(101)
     response = client.request_inverted(inverted_request)
     self.assertEqual(len(response.items), 1)
-    self.assertEqual(response.items[0].keys[100].bytes_list.values[0],
-                     'key1'.encode())
-    self.assertEqual(response.items[0].fields[101].bytes_list.values[0],
-                     '101_1'.encode())
+    self.assertEqual(
+        response.items[0].fields.map_items[100].bytes_list.values[0],
+        'key1'.encode())
+    self.assertEqual(
+        response.items[0].fields.map_items[101].bytes_list.values[0],
+        '101_1'.encode())
 
 
 class TestClientInternal(unittest.TestCase):

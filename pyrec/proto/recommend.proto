@@ -45,7 +45,7 @@ message RetrievalInfo {
 message ItemInfo {
   // We use FeatureMap instead of string for item_id,
   // since an item may have multiple ids from different source
-  map<int32, pyrec.feature.FeatureList> item_id = 1;
+  pyrec.feature.FeatureMap item_id = 1;
   repeated RetrievalInfo retrieval_infos = 2;
   map<int32, float> scores = 3;
 }

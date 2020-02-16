@@ -21,8 +21,7 @@ package pyrec.service;
 import "pyrec/proto/feature.proto";
 
 message IndexItem {
-  map<int32, pyrec.feature.FeatureList> keys = 1;
-  map<int32, pyrec.feature.FeatureList> fields = 2;
+  pyrec.feature.FeatureMap fields = 1;
 }
 
 message MatchSearchItem {

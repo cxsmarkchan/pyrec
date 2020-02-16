@@ -60,6 +60,7 @@ class TestCBRetrievalServer(unittest.TestCase):
       }).set_retrieval_id(1045) \
           .set_request_num(10) \
           .set_extract_key([201, 103]) \
+          .set_item_keys([100]) \
           .set_indexer(self._indexer) \
           .run(self._server_address)
 
@@ -69,7 +70,7 @@ class TestCBRetrievalServer(unittest.TestCase):
 
     client = RetrievalClient(self._server_address)
     request = PyRecRequest(request_id='123'.encode())
-    feature_map = request.context[201].feature_map
+    feature_map = request.context[201].map_items
     feature_list = feature_map[103].bytes_list
     feature_list.values.append('103_2'.encode())
     response = client.request_retrieval(request)
@@ -78,7 +79,8 @@ class TestCBRetrievalServer(unittest.TestCase):
     self.assertEqual(len(response.items), 2)
     expected_items = [key.encode() for key in ['key2', 'key4']]
     for item in response.items:
-      self.assertTrue(item.item_id[100].bytes_list.values[0] in expected_items)
+      self.assertTrue(item.item_id.map_items[100].bytes_list.values[0]
+                      in expected_items)
       self.assertEqual(len(item.retrieval_infos), 1)
       self.assertEqual(item.retrieval_infos[0].retrieval_id, 1045)
       self.assertEqual(item.retrieval_infos[0].num_items, 2)
@@ -95,6 +97,7 @@ class TestClientInternal(unittest.TestCase):
     }).set_retrieval_id(1045) \
         .set_request_num(10) \
         .set_extract_key([201, 103]) \
+        .set_item_keys([100]) \
         .set_indexer(IndexerClient(address)) \
         .create_server()
 

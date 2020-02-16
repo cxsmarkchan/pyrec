@@ -51,6 +51,7 @@ class CBRetrievalServerTest : public testing::Test {
 
     auto indexer_server = HashIndexerServer::CreateFromCsv(ss, format);
     CBRetrievalServer::Param param = {
+      {100},
       std::shared_ptr<LocalIndexerClientInternal>(
           new LocalIndexerClientInternal(indexer_server)),
       std::make_pair(201, 103),
@@ -73,7 +74,7 @@ TEST_F(CBRetrievalServerTest, DoRetrieval) {
   pyrec::service::PyRecRequest request;
   request.set_request_id("123");
   auto* context = request.mutable_context();
-  auto* feature_map = (*context)[201].mutable_feature_map();
+  auto* feature_map = (*context)[201].mutable_map_items();
   (*feature_map)[103].mutable_bytes_list()->add_values("103_2");
 
   pyrec::service::ItemReply reply;
@@ -82,7 +83,7 @@ TEST_F(CBRetrievalServerTest, DoRetrieval) {
   ASSERT_EQ(reply.items_size(), 2);
   std::unordered_set<std::string> expected_items = {"key2", "key4"};
   for (auto& item : reply.items()) {
-    auto& item_id = item.item_id();
+    auto& item_id = item.item_id().map_items();
     auto it = item_id.find(100);
     ASSERT_TRUE(it != item_id.end());
     ASSERT_TRUE(expected_items.find(it->second.bytes_list().values(0))

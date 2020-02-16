@@ -49,5 +49,5 @@ message FeatureList {
 }
 
 message FeatureMap {
-  map<int32, FeatureList> feature_map = 1;
+  map<int32, FeatureList> map_items = 1;
 }

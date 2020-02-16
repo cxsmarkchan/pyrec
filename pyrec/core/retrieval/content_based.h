@@ -18,6 +18,7 @@
 #define PYREC_CORE_RETRIEVAL_CONTENT_BASED_H_
 
 #include <string>
+#include <vector>
 #include <memory>
 #include <utility>
 #include <unordered_map>
@@ -41,6 +42,7 @@ class CBRetrievalServer final :
       const CBRetrievalServer&) = delete;
 
   struct Param {
+    std::vector<pyrec::types::FieldId> item_keys;
     std::shared_ptr<IndexerClientInternal> indexer;
     std::pair<pyrec::types::FieldId, pyrec::types::FieldId> extract_key;
     std::unordered_map<pyrec::types::FieldId, std::string> filter_rules;
@@ -99,6 +101,11 @@ class CBRetrievalServerInterface : public RetrievalServiceInterface {
 
   CBRetrievalServerInterface& SetRequestNum(int request_num) {
     request_num_ = request_num;
+    return *this;
+  }
+
+  CBRetrievalServerInterface& AddItemKey(pyrec::types::FieldId key_id) {
+    param_.item_keys.push_back(key_id);
     return *this;
   }
 
