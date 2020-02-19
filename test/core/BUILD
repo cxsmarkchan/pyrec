@@ -9,6 +9,7 @@ filegroup(
         "//test/core/indexer:cc_files",
         "//test/core/retrieval:cc_files",
         "//test/core/feature:cc_files",
+        "//test/core/context:cc_files",
     ],
     visibility = ["//test:__pkg__"],
 )

@@ -9,29 +9,31 @@ filegroup(
 )
 
 cc_library(
-    name = "indexer",
-    deps = [":indexer_base", ":hash_indexer"],
+    name = "context",
+    deps = [":context_base", ":kv_context"],
     visibility = ["//visibility:public"],
 )
 
 cc_library(
-    name = "indexer_base",
+    name = "context_base",
     hdrs = [
-        "indexer_interface.h",
-        "indexer_client.h",
+        "context_interface.h",
+        "context_client.h",
     ],
-    deps = ["//pyrec/proto:indexer_cc_proto"],
+    deps = ["//pyrec/proto:recommend_cc_proto"],
     visibility = ["//visibility:public"],
 )
 
 cc_library(
-    name = "hash_indexer",
-    srcs = ["hash_indexer.cc"],
-    hdrs = ["hash_indexer.h"],
+    name = "kv_context",
+    srcs = ["kv_context.cc"],
+    hdrs = ["kv_context.h"],
     deps = [
-        ":indexer_base",
-        "//pyrec/proto:indexer_cc_proto",
+        ":context_base",
+        "//pyrec/core/feature:string_serialize",
+        "//pyrec/proto:recommend_cc_proto",
         "//pyrec/core/util:util",
+        "//pyrec/core/indexer:hash_indexer",
         "@boost//:algorithm",
         "@boost//:lexical_cast",
     ],

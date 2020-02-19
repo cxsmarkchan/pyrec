@@ -65,7 +65,7 @@ message PyRecRequestWithItems {
 
 message ContextReply {
   bytes request_id = 1;
-  map<int32, pyrec.feature.FeatureMap> context = 2;
+  pyrec.feature.FeatureMap context = 2;
 }
 
 message ItemReply {
@@ -82,7 +82,7 @@ service ConfService {
 }
 
 service ContextService {
-  rpc OnContext(PyRecRequest) returns (ContextReply) {}
+  rpc Context(PyRecRequest) returns (ContextReply) {}
 }
 
 service RetrievalService {

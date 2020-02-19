@@ -11,6 +11,7 @@ filegroup(
          "//pyrec/core/indexer:cc_files",
          "//pyrec/core/retrieval:cc_files",
          "//pyrec/core/feature:cc_files",
+         "//pyrec/core/context:cc_files",
     ],
     visibility = ["//pyrec:__pkg__"]
 )

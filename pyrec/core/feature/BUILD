@@ -9,6 +9,14 @@ filegroup(
 )
 
 cc_library(
+    name = "feature",
+    deps = [
+        ":string_serialize",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "string_serialize",
     hdrs = [
         "string_serialize.h",

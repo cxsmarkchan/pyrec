@@ -9,6 +9,12 @@ filegroup(
 )
 
 cc_library(
+    name = "retrieval",
+    deps = [":retrieval_base", ":content_based"],
+    visibility = ["//visibility:public"],
+)
+
+cc_library(
     name = "retrieval_base",
     hdrs = [
         "retrieval_interface.h",
