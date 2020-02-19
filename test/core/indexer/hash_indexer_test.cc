@@ -22,8 +22,8 @@
 
 #include "gtest/gtest.h"
 
-#include "pyrec/core/util/types.h"
-#include "pyrec/core/indexer/hash_indexer.h"
+#include "core/util/types.h"
+#include "core/indexer/hash_indexer.h"
 
 using pyrec::service::HashIndexerServer;
 using pyrec::types::FieldId;

@@ -18,5 +18,10 @@ pylint_test(
 
 cpplint_test(
     name = "cpplint",
-    srcs = ["//pyrec:pyrec_cc_files", "//test:test_cc_files"],
+    srcs = [
+        "//core:core_cc_files",
+        "//pyrec:pyrec_cc_files",
+        "//test:test_cc_files",
+        "//tools:tools_cc_files",
+    ],
 )

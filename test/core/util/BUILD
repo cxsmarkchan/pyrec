@@ -8,7 +8,7 @@ cc_test(
     name = "util_test",
     srcs = glob(["**/*.cc"]),
     deps = [
-        "//pyrec/core/util:util",
+        "//core/util:util",
         "@com_google_googletest//:gtest_main",
     ],
 )

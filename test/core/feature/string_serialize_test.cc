@@ -20,7 +20,7 @@
 #include "gtest/gtest.h"
 #include "boost/algorithm/string.hpp"
 
-#include "pyrec/core/feature/string_serialize.h"
+#include "core/feature/string_serialize.h"
 
 using pyrec::feature::FeatureMap;
 

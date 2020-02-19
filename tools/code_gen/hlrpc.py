@@ -313,8 +313,8 @@ class HlrpcCodeGenerator:
 
     include_path = '#include <memory>\n\n' \
                    '#include \"%s.grpc.pb.h\"\n' \
-                   '#include \"pyrec/core/util/ip.h\"\n' \
-                   '#include \"pyrec/core/util/status.h\"\n' \
+                   '#include \"core/util/ip.h\"\n' \
+                   '#include \"core/util/status.h\"\n' \
                    % self._path_without_suffix
     return '\n'.join([def_header,
                       include_path,

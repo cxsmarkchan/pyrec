@@ -8,8 +8,8 @@ cc_test(
     name = "content_based_test",
     srcs = ["content_based_test.cc"],
     deps = [
-        "//pyrec/core/retrieval:content_based",
-        "//pyrec/core/indexer:hash_indexer",
+        "//core/retrieval:content_based",
+        "//core/indexer:hash_indexer",
         "@com_google_googletest//:gtest_main",
     ],
 )

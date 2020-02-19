@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-#define private public
-#define protected public
+#ifndef PYREC_CORE_RECOMMEND_RECOMMEND_H_
+#define PYREC_CORE_RECOMMEND_RECOMMEND_H_
 
-#include "gtest/gtest.h"
+#include "pyrec/proto/recommend.hlrpc.pb.h"
+#include "core/util/status.h"
 
-#include "core/util/ip.h"
+namespace pyrec {
+namespace service {
 
-class IpTest : public testing::Test {
- public:
-  void SetUp() {}
-  void TearDown() {}
+class RecommendServer final :
+    public RecommendServiceHybridBase {
+  pyrec::Status OnRecommendProcess(const PyRecRequest* request,
+                                   ItemReply* reply) override;
 };
 
-TEST(IpTest, DoAddressTest) {
-  pyrec::Address address{"127.0.0.1", 2345};
-  ASSERT_STREQ(address.ToString().c_str(), "127.0.0.1:2345");
-}
+}  // namespace service
+}  // namespace pyrec
+
+#endif  // PYREC_CORE_RECOMMEND_RECOMMEND_H_

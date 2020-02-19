@@ -25,8 +25,8 @@
 
 #include "pyrec/proto/recommend.pb.h"
 
-#include "pyrec/core/util/types.h"
-#include "pyrec/core/context/kv_context.h"
+#include "core/util/types.h"
+#include "core/context/kv_context.h"
 
 using pyrec::types::FieldId;
 using pyrec::service::KvContextServer;

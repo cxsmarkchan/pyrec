@@ -12,10 +12,10 @@ py_wrap_cc(
         "context/context.i",
         "//tools/swig:swig_tools",
     ],
-    deps = ["//pyrec/core/recommend:recommend",
-            "//pyrec/core/indexer:indexer",
-            "//pyrec/core/retrieval:retrieval",
-            "//pyrec/core/context:context",
+    deps = ["//core/recommend:recommend",
+            "//core/indexer:indexer",
+            "//core/retrieval:retrieval",
+            "//core/context:context",
             "@local_config_python//:python_headers"],
     visibility = ["//visibility:public"]
 )
@@ -28,7 +28,7 @@ filegroup(
 
 filegroup(
     name = "pyrec_cc_files",
-    srcs = ["//pyrec/core:cc_files"],
+    srcs = glob(["**/*.cc", "**/*.h"]),
     visibility = ["//visibility:public"]
 )
 

@@ -8,7 +8,7 @@ cc_test(
     name = "kv_context_test",
     srcs = ["kv_context_test.cc"],
     deps = [
-        "//pyrec/core/context:kv_context",
+        "//core/context:kv_context",
         "@com_google_googletest//:gtest_main",
     ],
 )

@@ -19,7 +19,7 @@
 
 #include "gtest/gtest.h"
 
-#include "pyrec/core/util/types.h"
+#include "core/util/types.h"
 
 class TypesTest : public testing::Test {
  public:

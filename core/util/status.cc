@@ -14,20 +14,13 @@
  * limitations under the License.
  */
 
-#define private public
-#define protected public
+#include "core/util/status.h"
 
-#include "gtest/gtest.h"
+namespace pyrec {
 
-#include "core/util/ip.h"
+const Status& Status::OK = Status();
+const Status& Status::CANCELLED = Status(StatusCode::CANCELLED, "");
+const Status& Status::UNIMPLEMENTED = Status(StatusCode::CANCELLED,
+                                             "Service method unimplemented");
 
-class IpTest : public testing::Test {
- public:
-  void SetUp() {}
-  void TearDown() {}
-};
-
-TEST(IpTest, DoAddressTest) {
-  pyrec::Address address{"127.0.0.1", 2345};
-  ASSERT_STREQ(address.ToString().c_str(), "127.0.0.1:2345");
-}
+}  // namespace pyrec

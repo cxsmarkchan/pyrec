@@ -23,10 +23,10 @@
 #include "gtest/gtest.h"
 
 #include "pyrec/proto/recommend.pb.h"
-#include "pyrec/core/util/types.h"
-#include "pyrec/core/indexer/hash_indexer.h"
-#include "pyrec/core/indexer/indexer_client.h"
-#include "pyrec/core/retrieval/content_based.h"
+#include "core/util/types.h"
+#include "core/indexer/hash_indexer.h"
+#include "core/indexer/indexer_client.h"
+#include "core/retrieval/content_based.h"
 
 using pyrec::service::HashIndexerServer;
 using pyrec::service::LocalIndexerClientInternal;

@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-#define private public
-#define protected public
+#include "core/recommend/recommend.h"
 
-#include "gtest/gtest.h"
+#include <boost/format.hpp>
 
-#include "core/util/ip.h"
+namespace pyrec {
+namespace service {
 
-class IpTest : public testing::Test {
- public:
-  void SetUp() {}
-  void TearDown() {}
-};
-
-TEST(IpTest, DoAddressTest) {
-  pyrec::Address address{"127.0.0.1", 2345};
-  ASSERT_STREQ(address.ToString().c_str(), "127.0.0.1:2345");
+pyrec::Status RecommendServer::OnRecommendProcess(const PyRecRequest* request,
+                                                  ItemReply* reply) {
+  reply->set_request_id(boost::str(boost::format("%s-%s")
+        % request->request_id()
+        % request->request_id()));
+  return pyrec::Status::OK;
 }
+
+}  // namespace service
+}  // namespace pyrec

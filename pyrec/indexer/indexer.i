@@ -1,13 +1,13 @@
 %{
-  #include "pyrec/core/indexer/indexer_interface.h"
-  #include "pyrec/core/indexer/indexer_client.h"
-  #include "pyrec/core/indexer/hash_indexer.h"
+  #include "core/indexer/indexer_interface.h"
+  #include "core/indexer/indexer_client.h"
+  #include "core/indexer/hash_indexer.h"
 %}
 
 %shared_ptr(pyrec::service::IndexerClientInternal)
 %shared_ptr(pyrec::service::RemoteIndexerClientInternal)
 %shared_ptr(pyrec::service::LocalIndexerClientInternal)
-%include "pyrec/core/indexer/indexer_client.h"
+%include "core/indexer/indexer_client.h"
 
 namespace pyrec {
 namespace service {

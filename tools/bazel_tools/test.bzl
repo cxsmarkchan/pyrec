@@ -94,7 +94,7 @@ def pylint_test(name, deps=[], srcs=[], config=""):
 
 def cpplint_test(name, deps=[], srcs=[]):
     """Cpplint check, requires cpplint installed."""
-    cmd = "cpplint --root $$(pwd) $(SRCS)"
+    cmd = "cpplint --root $$(pwd)/.. $(SRCS)"
 
     cmd_test(
         name = name,

@@ -1,7 +1,7 @@
 %{
-  #include "pyrec/core/retrieval/retrieval_interface.h"
-  #include "pyrec/core/retrieval/retrieval_client.h"
-  #include "pyrec/core/retrieval/content_based.h"
+  #include "core/retrieval/retrieval_interface.h"
+  #include "core/retrieval/retrieval_client.h"
+  #include "core/retrieval/content_based.h"
 %}
 
 %include "pyrec/indexer/indexer.i"
@@ -9,7 +9,7 @@
 %shared_ptr(pyrec::service::RetrievalClientInternal)
 %shared_ptr(pyrec::service::RemoteRetrievalClientInternal)
 %shared_ptr(pyrec::service::LocalRetrievalClientInternal)
-%include "pyrec/core/retrieval/retrieval_client.h"
+%include "core/retrieval/retrieval_client.h"
 
 namespace pyrec {
 namespace service {

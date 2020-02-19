@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
-#define private public
-#define protected public
+#ifndef PYREC_CORE_SERVICE_BASE_H_
+#define PYREC_CORE_SERVICE_BASE_H_
 
-#include "gtest/gtest.h"
+#include <memory>
 
+#include "core/util/status.h"
 #include "core/util/ip.h"
 
-class IpTest : public testing::Test {
+namespace pyrec {
+namespace service {
+
+template<class Server>
+class ServerWrapper {
  public:
-  void SetUp() {}
-  void TearDown() {}
+  int Run(const char* ip, int port) {
+    return server_.Run({ip, port});
+  }
+ private:
+  Server server_;
 };
 
-TEST(IpTest, DoAddressTest) {
-  pyrec::Address address{"127.0.0.1", 2345};
-  ASSERT_STREQ(address.ToString().c_str(), "127.0.0.1:2345");
-}
+}  // namespace service
+}  // namespace pyrec
+
+#endif  // PYREC_CORE_SERVICE_BASE_H_

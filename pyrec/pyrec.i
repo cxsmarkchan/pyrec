@@ -1,13 +1,13 @@
 %module pyrec
 %{
-  #include "pyrec/core/util/types.h"
-  #include "pyrec/core/service/base.h"
-  #include "pyrec/core/recommend/recommend.h"
+  #include "core/util/types.h"
+  #include "core/service/base.h"
+  #include "core/recommend/recommend.h"
 %}
 
 %include "tools/swig/stl.i"
 
-%include "pyrec/core/util/types.h"
+%include "core/util/types.h"
 %include "pyrec/indexer/indexer.i"
 %include "pyrec/retrieval/retrieval.i"
 %include "pyrec/context/context.i"

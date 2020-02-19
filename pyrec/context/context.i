@@ -1,13 +1,13 @@
 %{
-  #include "pyrec/core/context/context_interface.h"
-  #include "pyrec/core/context/context_client.h"
-  #include "pyrec/core/context/kv_context.h"
+  #include "core/context/context_interface.h"
+  #include "core/context/context_client.h"
+  #include "core/context/kv_context.h"
 %}
 
 %shared_ptr(pyrec::service::ContextClientInternal)
 %shared_ptr(pyrec::service::RemoteContextClientInternal)
 %shared_ptr(pyrec::service::LocalContextClientInternal)
-%include "pyrec/core/context/context_client.h"
+%include "core/context/context_client.h"
 
 namespace pyrec {
 namespace service {
