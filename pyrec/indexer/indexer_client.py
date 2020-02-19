@@ -66,18 +66,31 @@ class IndexerClient:
     return response
 
 
-def make_internal_indexer_client(indexer):
-  """
-  construct an internal indexer client for other pyrec services to call.
-  :param indexer: A pyrec.indexer.IndexerClient object
-                  or a IndexerService object
-  :return: an IndexerClientInternal object.
-  """
-  if isinstance(indexer, IndexerClientInternal):
-    return indexer
-  if isinstance(indexer, IndexerServicePyBase):
-    return LocalIndexerClientInternal(indexer.get_server())
-  if isinstance(indexer, IndexerClient):
-    address = indexer.address
-    return RemoteIndexerClientInternal(address.ip, address.port)
-  raise TypeError(indexer)
+class InternalIndexerClientMaker:
+  """Make the indexer client for internal C++ call."""
+  @staticmethod
+  def can_make(service):
+    """
+    :param service: Any object
+    :return: whether this object can be transformed into
+              an internal indexer client.
+    """
+    return isinstance(service, (IndexerClientInternal, IndexerClient)) \
+           or (isinstance(service, IndexerServicePyBase) and service.created)
+
+  @staticmethod
+  def make_client(indexer):
+    """
+    construct an internal indexer client for other pyrec services to call.
+    :param indexer: A pyrec.indexer.IndexerClient object
+                    or a IndexerService object
+    :return: an IndexerClientInternal object.
+    """
+    if isinstance(indexer, IndexerClientInternal):
+      return indexer
+    if isinstance(indexer, IndexerServicePyBase):
+      return LocalIndexerClientInternal(indexer.get_server())
+    if isinstance(indexer, IndexerClient):
+      address = indexer.address
+      return RemoteIndexerClientInternal(address.ip, address.port)
+    raise TypeError(indexer)

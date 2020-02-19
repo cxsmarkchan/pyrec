@@ -53,18 +53,32 @@ class RetrievalClient:
     return response
 
 
-def make_internal_retrieval_client(retrieval):
-  """
-  construct an internal retrieval client for other pyrec services to call.
-  :param indexer: A pyrec.retrieval.RetrievalClient object
-                  or a RetrievalService object
-  :return: an RetrievalClientInternal object.
-  """
-  if isinstance(retrieval, RetrievalClientInternal):
-    return retrieval
-  if isinstance(retrieval, RetrievalServicePyBase):
-    return LocalRetrievalClientInternal(retrieval.get_server())
-  if isinstance(retrieval, RetrievalClient):
-    address = retrieval.address
-    return RemoteRetrievalClientInternal(address.ip, address.port)
-  raise TypeError(retrieval)
+class InternalRetrievalClientMaker:
+  """Make the retrieval client for internal C++ call."""
+  @staticmethod
+  def can_make(service):
+    """
+    :param service: Any object
+    :return: whether this object can be transformed into
+              an internal indexer client.
+    """
+    return isinstance(service, (RetrievalClientInternal, RetrievalClient)) \
+           or (isinstance(service, RetrievalServicePyBase)
+               and service.created)
+
+  @staticmethod
+  def make_client(retrieval):
+    """
+    construct an internal retrieval client for other pyrec services to call.
+    :param indexer: A pyrec.retrieval.RetrievalClient object
+                    or a RetrievalService object
+    :return: an RetrievalClientInternal object.
+    """
+    if isinstance(retrieval, RetrievalClientInternal):
+      return retrieval
+    if isinstance(retrieval, RetrievalServicePyBase):
+      return LocalRetrievalClientInternal(retrieval.get_server())
+    if isinstance(retrieval, RetrievalClient):
+      address = retrieval.address
+      return RemoteRetrievalClientInternal(address.ip, address.port)
+    raise TypeError(retrieval)

@@ -16,7 +16,7 @@
 from pyrec.pywrap_core import CBRetrievalServerInterface
 
 from pyrec.retrieval.retrieval_base import RetrievalServicePyBase
-from pyrec.indexer.indexer_client import make_internal_indexer_client
+from pyrec.indexer.indexer_client import InternalIndexerClientMaker
 
 class CBRetrievalServer(RetrievalServicePyBase):
   """Server of the retrieval service system."""
@@ -92,7 +92,7 @@ class CBRetrievalServer(RetrievalServicePyBase):
     """
     Set the indexer containing all the items.
     """
-    self._indexer = make_internal_indexer_client(indexer)
+    self._indexer = InternalIndexerClientMaker.make_client(indexer)
     return self
 
   def _create_server_impl(self):

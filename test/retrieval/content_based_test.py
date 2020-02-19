@@ -27,7 +27,7 @@ from pyrec.indexer.hash_indexer import HashIndexerServer
 from pyrec.indexer.indexer_client import IndexerClient
 from pyrec.retrieval.content_based import CBRetrievalServer
 from pyrec.retrieval.retrieval_client import RetrievalClient
-from pyrec.retrieval.retrieval_client import make_internal_retrieval_client
+from pyrec.retrieval.retrieval_client import InternalRetrievalClientMaker
 from pyrec.proto.recommend_pb2 import PyRecRequest
 
 
@@ -98,14 +98,17 @@ class TestClientInternal(unittest.TestCase):
         .set_request_num(10) \
         .set_extract_key([201, 103]) \
         .set_item_keys([100]) \
-        .set_indexer(IndexerClient(address)) \
-        .create_server()
+        .set_indexer(IndexerClient(address))
 
-    internal_client = make_internal_retrieval_client(server)
+    self.assertFalse(InternalRetrievalClientMaker.can_make(server))
+    server.create_server()
+    self.assertTrue(InternalRetrievalClientMaker.can_make(server))
+    internal_client = InternalRetrievalClientMaker.make_client(server)
     self.assertTrue(isinstance(internal_client, LocalRetrievalClientInternal))
     self.assertTrue(isinstance(internal_client, RetrievalClientInternal))
 
     client = RetrievalClient(address)
-    internal_client = make_internal_retrieval_client(client)
+    self.assertTrue(InternalRetrievalClientMaker.can_make(client))
+    internal_client = InternalRetrievalClientMaker.make_client(client)
     self.assertTrue(isinstance(internal_client, RemoteRetrievalClientInternal))
     self.assertTrue(isinstance(internal_client, RetrievalClientInternal))

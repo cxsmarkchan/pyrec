@@ -31,7 +31,7 @@ from pyrec.pywrap_core import RemoteIndexerClientInternal
 
 from pyrec.indexer.hash_indexer import HashIndexerServer
 from pyrec.indexer.indexer_client import IndexerClient
-from pyrec.indexer.indexer_client import make_internal_indexer_client
+from pyrec.indexer.indexer_client import InternalIndexerClientMaker
 
 
 class TestHashIndexer(unittest.TestCase):
@@ -127,13 +127,17 @@ class TestClientInternal(unittest.TestCase):
                            inner_delimiter=':')
     server = HashIndexerServer()
     server.set_input_csv(test_csv_file_name, csv_format) \
-        .create_server()
 
-    internal_client = make_internal_indexer_client(server)
+    self.assertFalse(InternalIndexerClientMaker.can_make(server))
+    server.create_server()
+
+    self.assertTrue(InternalIndexerClientMaker.can_make(server))
+    internal_client = InternalIndexerClientMaker.make_client(server)
     self.assertTrue(isinstance(internal_client, LocalIndexerClientInternal))
     self.assertTrue(isinstance(internal_client, IndexerClientInternal))
 
     client = IndexerClient(Address('127.0.0.1', 12358))
-    internal_client = make_internal_indexer_client(client)
+    self.assertTrue(InternalIndexerClientMaker.can_make(client))
+    internal_client = InternalIndexerClientMaker.make_client(client)
     self.assertTrue(isinstance(internal_client, RemoteIndexerClientInternal))
     self.assertTrue(isinstance(internal_client, IndexerClientInternal))
