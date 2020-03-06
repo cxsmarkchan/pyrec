@@ -14,22 +14,41 @@
  * limitations under the License.
  */
 
-#ifndef PYREC_CORE_RECOMMEND_RECOMMEND_H_
-#define PYREC_CORE_RECOMMEND_RECOMMEND_H_
+#ifndef PYREC_CORE_RECOMMENDER_RECOMMENDER_INTERFACE_H_
+#define PYREC_CORE_RECOMMENDER_RECOMMENDER_INTERFACE_H_
+
+#include <string>
+#include <vector>
+#include <memory>
+#include <unordered_map>
+#include <unordered_set>
+#include <istream>
+#include <fstream>
 
 #include "pyrec/proto/recommend.hlrpc.pb.h"
-#include "core/util/status.h"
 
 namespace pyrec {
 namespace service {
 
-class RecommendServer final :
-    public RecommendServiceHybridBase {
-  pyrec::Status OnRecommendProcess(const PyRecRequest* request,
-                                   ItemReply* reply) override;
-};
+class RecommenderServiceInterface {
+ public:
+  RecommenderServiceInterface() : server_(nullptr) {}
+
+  int Run(const char* ip, int port) {
+    if (!server_)
+      return -1;
+    return server_->Run({ip, port});
+  }
+
+  std::shared_ptr<RecommenderServiceHybridBase> GetServer() const {
+    return server_;
+  }
+
+ protected:
+  std::shared_ptr<RecommenderServiceHybridBase> server_;
+};  // class RecommenderServiceInterface
 
 }  // namespace service
 }  // namespace pyrec
 
-#endif  // PYREC_CORE_RECOMMEND_RECOMMEND_H_
+#endif  // PYREC_CORE_RECOMMENDER_RECOMMENDER_INTERFACE_H_

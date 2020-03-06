@@ -2,7 +2,6 @@
 %{
   #include "core/util/types.h"
   #include "core/service/base.h"
-  #include "core/recommend/recommend.h"
 %}
 
 %include "tools/swig/stl.i"
@@ -11,6 +10,7 @@
 %include "pyrec/indexer/indexer.i"
 %include "pyrec/retrieval/retrieval.i"
 %include "pyrec/context/context.i"
+%include "pyrec/recommender/recommender.i"
 
 namespace pyrec {
 namespace service {
@@ -23,4 +23,3 @@ class ServerWrapper {
 } // namespace service
 } // namespace pyrec
 
-%template(RecommendServerWrapper) pyrec::service::ServerWrapper<pyrec::service::RecommendServer>;

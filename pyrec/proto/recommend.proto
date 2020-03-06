@@ -73,12 +73,12 @@ message ItemReply {
   repeated ItemInfo items = 2;
 }
 
-service RecommendService {
-  rpc OnRecommend(PyRecRequest) returns (ItemReply) {}
+service RecommenderService {
+  rpc Recommend(PyRecRequest) returns (ItemReply) {}
 }
 
 service ConfService {
-  rpc OnConfigure(PyRecRequest) returns (Conf) {}
+  rpc GetConfigure(PyRecRequest) returns (Conf) {}
 }
 
 service ContextService {
@@ -89,6 +89,10 @@ service RetrievalService {
   rpc Retrieval(PyRecRequest) returns (ItemReply) {}
 }
 
-service RankingService {
-  rpc OnRanking(PyRecRequestWithItems) returns (ItemReply) {}
+service ScoringService {
+  rpc Scoring(PyRecRequestWithItems) returns (ItemReply) {}
+}
+
+service RerankingService {
+  rpc Reranking(PyRecRequestWithItems) returns (ItemReply) {}
 }

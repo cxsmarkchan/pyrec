@@ -7,7 +7,7 @@ filegroup(
     srcs = [
         "//core/util:cc_files",
         "//core/service:cc_files",
-        "//core/recommend:cc_files",
+        "//core/recommender:cc_files",
         "//core/indexer:cc_files",
         "//core/retrieval:cc_files",
         "//core/feature:cc_files",
