@@ -55,7 +55,7 @@ def hlrpc_cc_proto_library(
              name = name,
              srcs = srcs,
              use_grpc_plugin = use_grpc_plugin,
-             **kwargs,
+             **kwargs
         )
         return
 
@@ -63,14 +63,14 @@ def hlrpc_cc_proto_library(
         name = name + "_proto",
         srcs = srcs,
         use_grpc_plugin = use_grpc_plugin,
-        **kwargs,
+        **kwargs
     )
 
     output_names = [src.split("/")[-1][:-6] + ".hlrpc.pb.h" for src in srcs]
     _hlrpc_cc_proto_library(
         name = name + "_hlrpc",
         srcs = srcs,
-        outputs = output_names,
+        outputs = output_names
     )
 
     native.cc_library(
@@ -78,5 +78,5 @@ def hlrpc_cc_proto_library(
         hdrs = output_names,
         deps = [
             ":" + name + "_proto",
-        ],
+        ]
     )
